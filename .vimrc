@@ -2,6 +2,11 @@ set encoding=UTF-8  	      " Encoding
 set incsearch 		      " Search Highlight while typing
 set hlsearch 		      " Highlight all searches
 set nocompatible              " be iMproved, required
+"Tab Settings
+set expandtab
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
 filetype off                  " required
 syntax on                     " Turn on syntax highlighting
 set relativenumber 	      " show relative line numbers
@@ -16,13 +21,14 @@ Plugin 'VundleVim/Vundle.vim'
 
 " All of your Plugins must be added before the following line
 Plugin 'preservim/nerdtree'
-Plugin 'itchyny/lightline.vim'
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'vim-airline/vim-airline'
 Plugin 'turbio/bracey.vim'
 Plugin 'mattn/emmet-vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'scrooloose/syntastic'
+Plugin 'Yggdroot/indentLine'
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
@@ -206,4 +212,18 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 "Airline
 let g:airline#extensions#tabline#enabled = 1
-
+"Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+"Indentline
+let g:indentLine_leadingSpaceEnabled = 1     
+let g:indentLine_setColors = 1 
+let g:indentLine_leadingSpaceChar = '·'
+let g:indentLine_char       = '▏'
+let g:indentLine_bgcolor_term = 0
+let g:indentLine_color_term = 184
