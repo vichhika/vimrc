@@ -7,6 +7,7 @@ set expandtab
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
+highlight Pmenu ctermbg=gray guibg=gray     "set popups menu color
 filetype off                  " required
 syntax on                     " Turn on syntax highlighting
 set relativenumber 	      " show relative line numbers
