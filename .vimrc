@@ -2,11 +2,13 @@ set encoding=UTF-8  	      " Encoding
 set incsearch 		      " Search Highlight while typing
 set hlsearch 		      " Highlight all searches
 set nocompatible              " be iMproved, required
+set wildmenu
 "Tab Settings
 set expandtab
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
+let g:user_emmet_leader_key=',' "Custom LeaderKey Emmet
 highlight Pmenu ctermbg=gray guibg=gray     "set popups menu color
 filetype off                  " required
 syntax on                     " Turn on syntax highlighting
@@ -30,6 +32,9 @@ Plugin 'mattn/emmet-vim'
 Plugin 'tpope/vim-commentary'
 Plugin 'scrooloose/syntastic'
 Plugin 'Yggdroot/indentLine'
+Plugin 'preservim/tagbar'
+Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plugin 'junegunn/fzf.vim'
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
@@ -212,7 +217,9 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 "Airline
+let g:airline#extensions#keymap#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#syntastic#enabled = 1
 "Syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -228,3 +235,9 @@ let g:indentLine_leadingSpaceChar = '·'
 let g:indentLine_char       = '▏'
 let g:indentLine_bgcolor_term = 0
 let g:indentLine_color_term = 184
+" My compile and run code
+"command! -nargs=0 JavaRun :!javac % && java $(echo % | awk -F "." '{print $1}');rm $(ls | grep \.class)
+autocmd filetype python nnoremap <F4> :w <bar> exec '!python '.shellescape('%')<CR>
+autocmd filetype c nnoremap <F4> :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
+autocmd filetype cpp nnoremap <F4> :w <bar> exec '!g++ '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
+"autocmd filetype java nnoremap <F4> :w <bar> exec '!javac '.shellescape('%').' && java '.shellescape('%:r')<CR>
