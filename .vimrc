@@ -30,6 +30,8 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable mouse
+set mouse=a
 " Sets relative line numbers
 set relativenumber
 
@@ -121,12 +123,6 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
-endif
-
-
 " Add a bit extra margin to the left
 set foldcolumn=1
 
@@ -134,32 +130,21 @@ set foldcolumn=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" B
 " Enable syntax highlighting
 syntax on
-" Enable 256 colors palette in Gnome Terminal
-if $COLORTERM == 'gnome-terminal'
-    set t_Co=256
-endif
-
-try
-    colorscheme desert
-catch
-endtry
 " gruvbox_material
 " Important!!
-        if has('termguicolors')
-          set termguicolors
-        endif
 
-        " For dark version.
-        set background=dark
+" For dark version.
+set background=dark
 
-        " Set contrast.
-        " This configuration option should be placed before `colorscheme gruvbox-material`.
-        " Available values: 'hard', 'medium'(default), 'soft'
-        let g:gruvbox_material_background = 'hard'
-        let g:gruvbox_material_transparent_background = 1
-        colorscheme gruvbox-material
+" Set contrast.
+" This configuration option should be placed before `colorscheme gruvbox-material`.
+" Available values: 'hard', 'medium'(default), 'soft'
+let g:gruvbox_material_background = 'medium'
+let g:gruvbox_material_transparent_background = 1
+colorscheme gruvbox-material
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -417,9 +402,14 @@ Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server'}
 Plug 'Yggdroot/indentLine'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'alvan/vim-closetag'
+Plug 'xuhdev/singlecompile'
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 call plug#end()
 
 " my keybinding
+" singlecompile
+nmap <F9> :SCCompile<cr>
+nmap <F10> :SCCompileRun<cr>
 " emmet
 let g:user_emmet_leader_key=','
 
@@ -431,6 +421,15 @@ let g:indentLine_char       = '▏'
 let g:indentLine_bgcolor_term = 0
 let g:indentLine_color_term = 184
 
+" Nerdtree config
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+let NERDTreeAutoDeleteBuffer = 1
 " tagbar config : Press F8 to show tagbar
 nmap <F8> :TagbarToggle<CR>
 
@@ -603,5 +602,17 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-autocmd CursorHold * silent call CocActionAsync('highlight')
+autocmd FileType scss setl iskeyword+=@-@
+noremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
